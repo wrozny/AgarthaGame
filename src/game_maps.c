@@ -21,7 +21,7 @@ const char map1[MAP1_SIZE_VERTICAL][MAP1_SIZE_HORIZONTAL] = {
 void LoadMapToScene(Scene* scene, MapType mapType) {
     BeginDrawing();
         ClearBackground(BLACK);
-        DrawText("Karol ma duzego nochala", 0, 0, 50, WHITE);
+        DrawText("Loading map...", 0, 0, 50, WHITE);
     EndDrawing();
 
     int rows;
