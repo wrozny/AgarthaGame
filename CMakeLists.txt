@@ -25,7 +25,7 @@ add_executable(AgarthaGame src/main.c ${GAME_SOURCE_FILES})
 target_include_directories(AgarthaGame PRIVATE include)
 target_link_libraries(AgarthaGame PRIVATE raylib)
 
-if(MSVC)
+if(WIN32 AND (CMAKE_BUILD_TYPE STREQUAL "Debug") AND MSVC)
     target_compile_options(AgarthaGame PRIVATE /fsanitize=address /Zi /MDd)
     target_link_options(AgarthaGame PRIVATE /fsanitize=address)
 endif()
