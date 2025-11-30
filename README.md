@@ -24,7 +24,7 @@ cmake --build . --config Release
 The final executable will be inside build/Release
 
 ## Ubuntu (24.04):
-<p>Will work the same as above but make sure to have OpenGL support and libx11!</p>
+Will work the same as above but make sure to have OpenGL support and libx11!
 ```
 sudo apt install libgl1-mesa-dev
 sudo apt install libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxkbcommon-dev
