@@ -31,7 +31,7 @@ if(WIN32 AND (CMAKE_BUILD_TYPE STREQUAL "Debug") AND MSVC)
 endif()
 
 if(UNIX AND NOT APPLE)
-    target_link_libraries(AgarthaGame m pthread dl)
+    target_link_libraries(AgarthaGame PRIVATE m pthread dl)
 endif()
 
 if(APPLE)
