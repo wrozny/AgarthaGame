@@ -2,7 +2,7 @@
 Game about bad people going to agartha, you have to protect the land.
 
 # How to build?
-<p>Use cmake to build the project</p>
+<p>I'm using cmake for this project.</p>
 
 ## Windows:
 Make a build directory:
