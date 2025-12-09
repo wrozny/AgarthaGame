@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
+
+#define STB_DS_IMPLEMENTATION
+#include "ds/stb_ds.h"
+
 #include "game.h"
 
 
