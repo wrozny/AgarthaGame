@@ -1,6 +1,7 @@
 #pragma once
 #include <stdlib.h>
 #include <stdio.h>
+#include <inttypes.h>
 #include "raylib.h"
 #include "assets.h"
 
@@ -9,6 +10,7 @@ typedef struct GameObject {
     Vector2 pos;
     Vector2 size;
     float rotation;
+    uint32_t objectId;
 } GameObject;
 
 typedef struct PhysicsObject {
