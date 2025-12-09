@@ -1,6 +1,7 @@
 #include "assets.h"
+#include "ds/stb_ds.h"
 
-Vector* Assets_loadedTextures;
+Texture2D *Assets_loadedTextures;
 SpriteData Assets_spriteData[SI_END_ENUM];
 
 
@@ -8,7 +9,7 @@ SpriteData Assets_spriteData[SI_END_ENUM];
     Loads all the assets into memory
 */
 void AssetsLoad() {
-    Assets_loadedTextures = create_vector(sizeof(Texture2D));
+    //Assets_loadedTextures = create_vector(sizeof(Texture2D));
 
     //int blocksSpritesheet = AssetsLoadTexture("resources/blocks.png");
 
@@ -43,12 +44,12 @@ void AssetsLoad() {
 
     #include "res/ashtar_sheran_png.h"
     int ashtarSheranTextureId = AssetsLoadTextureFromBytes(ASHTAR_SHERAN_PNG_FORMAT, ASHTAR_SHERAN_PNG, ASHTAR_SHERAN_PNG_SIZE);
-    Texture2D* ashtarTexture = AssetsGetTexture(ashtarSheranTextureId);
+    Texture2D ashtarTexture = AssetsGetTexture(ashtarSheranTextureId);
 
     AssetsLoadSpriteData(
         SI_ASHTAR_SHERAN_ICON,
         ashtarSheranTextureId,
-        (IntRect) {.x = 0, .y = 0, .width = ashtarTexture->width, .height = ashtarTexture->height}
+        (IntRect) {.x = 0, .y = 0, .width = ashtarTexture.width, .height = ashtarTexture.height}
     );
 
 
@@ -59,13 +60,11 @@ void AssetsLoad() {
     Frees all the assets that are inside memory
 */
 void AssetsUnload() {
-    for (int i = 0; i < Assets_loadedTextures->size; i++) {
-        Texture2D* tex = vec_get(Assets_loadedTextures, i);
-        if (tex != NULL) {
-            UnloadTexture(*tex);
-        }
+    for (int i = 0; i < arrlen(Assets_loadedTextures); i++) {
+        Texture2D tex = Assets_loadedTextures[i];
+        UnloadTexture(tex);
     }
-    vec_free(Assets_loadedTextures);
+    arrfree(Assets_loadedTextures);
 }
 
 
@@ -77,7 +76,7 @@ void AssetsDrawSprite(SpriteId spriteId, Rectangle destination, float rotation) 
     static const Vector2 ORIGIN_ZERO = { 0.0f, 0.0f };
 
     DrawTexturePro(
-        *spriteData.tex, 
+        spriteData.tex, 
             (Rectangle){
                 .x =      (float)spriteData.rect.x, 
                 .y =      (float)spriteData.rect.y,
@@ -98,9 +97,9 @@ void AssetsDrawSprite(SpriteId spriteId, Rectangle destination, float rotation) 
     Loads sprite data 
 */
 void AssetsLoadSpriteData(SpriteId spriteId, int texId, IntRect rect) {
-    Texture2D *tex = AssetsGetTexture(texId);
+    Texture2D tex = AssetsGetTexture(texId);
 
-    if(tex->id == 0) {
+    if(tex.id == 0) {
         printf("FATAL ERROR: Failed to load sprite with id: %d\n", spriteId);
         exit(-1);
     }
@@ -111,37 +110,40 @@ void AssetsLoadSpriteData(SpriteId spriteId, int texId, IntRect rect) {
 /*
     Loads texture into memory from file and returns id to it
 */
-int AssetsLoadTexture(const char* filePath) {
-    Texture2D *tex = malloc(sizeof(Texture2D));
-    *tex = LoadTexture(filePath);
-    vec_push(Assets_loadedTextures, tex);
+// int AssetsLoadTexture(const char* filePath) {
+//     Texture2D *tex = malloc(sizeof(Texture2D));
+//     *tex = LoadTexture(filePath);
+//     vec_push(Assets_loadedTextures, tex);
 
-    return Assets_loadedTextures->size - 1;
-}
+//     return Assets_loadedTextures->size - 1;
+// }
 
 /*
     Loads texture into memory from bytes
 */
 int AssetsLoadTextureFromBytes(const char* fileType, const unsigned char* fileData, int dataSize) {
-    Texture2D *tex = malloc(sizeof(Texture2D));
-    Image newImage =  LoadImageFromMemory(fileType, fileData, dataSize);
-    *tex = LoadTextureFromImage(newImage);
+    //Texture2D *tex = malloc(sizeof(Texture2D));
+    Texture2D tex;
+    Image newImage = LoadImageFromMemory(fileType, fileData, dataSize);
+    tex = LoadTextureFromImage(newImage);
     UnloadImage(newImage);
 
-    if(tex->id == 0) {
+    if(tex.id == 0) {
         printf("FATAL ERROR: Failed to load embeded asset %s, %d bytes", fileType, dataSize);
         exit(-1);
     }
 
-    vec_push(Assets_loadedTextures, tex);
-    return Assets_loadedTextures->size - 1;
+    arrpush(Assets_loadedTextures, tex);
+
+    return arrlen(Assets_loadedTextures) - 1;
 }
 
 /*
     Returns loaded texture by id
 */
-Texture2D* AssetsGetTexture(int texId) {
-    return vec_get(Assets_loadedTextures, texId);
+Texture2D AssetsGetTexture(int texId) {
+    Texture2D tex = Assets_loadedTextures[texId];
+    return tex;
 }
 
 /*

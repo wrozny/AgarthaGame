@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "ds/vector.h"
 #include "raylib.h"
 
 
@@ -24,11 +23,11 @@ typedef enum SpriteId {
 
 typedef struct SpriteData {
     IntRect rect;
-    Texture2D* tex;
+    Texture2D tex;
 } SpriteData;
 
 
-extern Vector* Assets_loadedTextures;
+extern Texture2D *Assets_loadedTextures;
 extern SpriteData Assets_spriteData[SI_END_ENUM];
 
 
@@ -65,7 +64,7 @@ SpriteData AssetsGetSpriteData(SpriteId spriteId);
 /*
     Returns loaded texture by id
 */
-Texture2D* AssetsGetTexture(int texId);
+Texture2D AssetsGetTexture(int texId);
 
 /*
     Draws sprite at given position
