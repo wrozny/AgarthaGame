@@ -1,3 +1,8 @@
+/*
+    THIS IS NOT USED ANYMORE, USE "ds/std_ds.h" INSTEAD
+*/
+
+
 #ifndef VECTOR_H
 #define VECTOR_H
 
