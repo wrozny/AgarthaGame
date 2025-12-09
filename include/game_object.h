@@ -58,30 +58,3 @@ void StaticObjectDestroy(StaticObject *staticObject);
     Applies the velocity to the physics objects position
 */
 void PhysicsObjectApplyVelocity(PhysicsObject *physicsObject, double deltaTime);
-
-
-
-// /*
-//     Creates new static object and returns pointer to it
-// */
-// StaticObject* StaticObjectCreate(int spriteId, Vector2 pos, Vector2 size, float rotation);
-
-// /*
-//     Draws the physics object
-// */
-// void PhysicsObjectDraw(PhysicsObject* physicsObject);
-
-// /*
-//     Draws the static object
-// */
-// void StaticObjectDraw(StaticObject* staticObject, Rectangle rect);
-
-// /*
-//     Frees the physics object memory
-// */
-// void PhysicsObjectDestroy(PhysicsObject* physicsObject);
-
-// /*
-//     Frees the static object memory
-// */
-// void StaticObjectDestroy(StaticObject* staticObject);
