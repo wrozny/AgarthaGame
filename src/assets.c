@@ -4,43 +4,18 @@
 Texture2D *Assets_loadedTextures;
 SpriteData Assets_spriteData[SI_END_ENUM];
 
+static int Assets_loadedAssetsCount = 0;
+
 
 /*
     Loads all the assets into memory
 */
 void AssetsLoad() {
-    //Assets_loadedTextures = create_vector(sizeof(Texture2D));
-
-    //int blocksSpritesheet = AssetsLoadTexture("resources/blocks.png");
-
-    // #include "res/agartha_jpeg.h"
-    // int agarthaBackground = AssetsLoadTextureFromBytes(AGARTHA_JPEG_FORMAT, AGARTHA_JPEG, AGARTHA_JPEG_SIZE);
-    // Texture2D* agarthaBackgroundTex = AssetsGetTexture(agarthaBackground);
-    
-    // AssetsLoadSpriteData(
-    //     SI_BACKGROUND_AGARTHA, 
-    //     agarthaBackground, 
-    //     (IntRect) {.x = 0, .y = 0, .width = agarthaBackgroundTex->width, .height = agarthaBackgroundTex->height}
-    // );
-
-    //int blocksSpritesheet = AssetsLoadTexture("resources/blocks.png");
-
     #include "res/blocks_png.h"
     int blocksSpritesheet = AssetsLoadTextureFromBytes(BLOCKS_PNG_FORMAT, BLOCKS_PNG, BLOCKS_PNG_SIZE);
 
     AssetsLoadSpriteData(SI_TILE_GRASS, blocksSpritesheet, (IntRect)  {0, 0,  64, 64});
     AssetsLoadSpriteData(SI_TILE_DIRT, blocksSpritesheet,  (IntRect)  {0, 64, 64, 64});
-
-
-    // #include "res/igor_png.h"
-    // int igorTextureId = AssetsLoadTextureFromBytes(IGOR_PNG_FORMAT, IGOR_PNG, IGOR_PNG_SIZE);
-    // Texture2D* igorTexture = AssetsGetTexture(igorTextureId);
-
-    // AssetsLoadSpriteData(
-    //     SI_ICON_IGOR, 
-    //     igorTextureId, 
-    //     (IntRect) {.x = 0, .y = 0, .width = igorTexture->width, .height = igorTexture->height}
-    // );
 
     #include "res/ashtar_sheran_png.h"
     int ashtarSheranTextureId = AssetsLoadTextureFromBytes(ASHTAR_SHERAN_PNG_FORMAT, ASHTAR_SHERAN_PNG, ASHTAR_SHERAN_PNG_SIZE);
@@ -91,8 +66,6 @@ void AssetsDrawSprite(SpriteId spriteId, Rectangle destination, float rotation) 
 }
 
 
-
-
 /*
     Loads sprite data 
 */
@@ -110,22 +83,19 @@ void AssetsLoadSpriteData(SpriteId spriteId, int texId, IntRect rect) {
 /*
     Loads texture into memory from file and returns id to it
 */
-// int AssetsLoadTexture(const char* filePath) {
-//     Texture2D *tex = malloc(sizeof(Texture2D));
-//     *tex = LoadTexture(filePath);
-//     vec_push(Assets_loadedTextures, tex);
-
-//     return Assets_loadedTextures->size - 1;
-// }
+int AssetsLoadTexture(const char* filePath) {
+    Texture2D tex = LoadTexture(filePath);
+    arrpush(Assets_loadedTextures, tex);
+    Assets_loadedAssetsCount++;
+    return arrlen(Assets_loadedTextures) - 1;
+}
 
 /*
     Loads texture into memory from bytes
 */
 int AssetsLoadTextureFromBytes(const char* fileType, const unsigned char* fileData, int dataSize) {
-    //Texture2D *tex = malloc(sizeof(Texture2D));
-    Texture2D tex;
     Image newImage = LoadImageFromMemory(fileType, fileData, dataSize);
-    tex = LoadTextureFromImage(newImage);
+    Texture2D tex = LoadTextureFromImage(newImage);
     UnloadImage(newImage);
 
     if(tex.id == 0) {
@@ -134,7 +104,7 @@ int AssetsLoadTextureFromBytes(const char* fileType, const unsigned char* fileDa
     }
 
     arrpush(Assets_loadedTextures, tex);
-
+    Assets_loadedAssetsCount++;
     return arrlen(Assets_loadedTextures) - 1;
 }
 
@@ -142,8 +112,12 @@ int AssetsLoadTextureFromBytes(const char* fileType, const unsigned char* fileDa
     Returns loaded texture by id
 */
 Texture2D AssetsGetTexture(int texId) {
-    Texture2D tex = Assets_loadedTextures[texId];
-    return tex;
+    if(texId > Assets_loadedAssetsCount) {
+        printf("FATAL ERROR: Texture id out of bounds! %d > %d", texId, Assets_loadedAssetsCount);
+        exit(-1);
+    }
+
+    return Assets_loadedTextures[texId];
 }
 
 /*
