@@ -1,5 +1,7 @@
 #include "game_object.h"
 
+static uint32_t g_nextGameObjectId = 0;
+
 
 /*
     Draws game object
@@ -27,6 +29,8 @@ GameObject* GameObjectCreate(SpriteId spriteId, Vector2 pos, Vector2 size, float
     newGameObject->pos = pos;
     newGameObject->size = size;
     newGameObject->rotation = rotation;
+    newGameObject->objectId = g_nextGameObjectId++;
+
     return newGameObject;
 }
 
@@ -94,49 +98,3 @@ void PhysicsObjectApplyVelocity(PhysicsObject *physicsObject, double deltaTime) 
     };
 }
 
-// /*
-//     Creates new physics object and returns pointer to it
-// */
-// PhysicsObject* PhysisObjectCreate(int spriteId, Vector2 pos, Vector2 size, float rotation) {
-//     PhysicsObject* newPhysicsObject = (PhysicsObject*)malloc(sizeof(PhysicsObject));
-//     newPhysicsObject->objectData = ObjectDataCreate(spriteId, pos, size, rotation);
-    
-//     return newPhysicsObject;    
-// }
-
-// /*
-//     Creates new static object and returns pointer to it
-// */
-// StaticObject* StaticObjectCreate(int spriteId, Vector2 pos, Vector2 size, float rotation) {
-//     StaticObject* newStaticObject = (StaticObject*)malloc(sizeof(StaticObject));
-//     newStaticObject->objectData = ObjectDataCreate(spriteId, pos, size, rotation);
-//     return newStaticObject;  
-// }
-
-// /*
-//     Draws the physics object
-// */
-// void PhysicsObjectDraw(PhysicsObject* physicsObject) {
-    
-// }
-
-// /*
-//     Draws the static object
-// */
-// void StaticObjectDraw(StaticObject* staticObject, Rectangle rect) {
-//     DrawTextureRec(staticObject->objectData->spriteData->tex, rect, staticObject->objectData->pos, WHITE);
-// }
-
-// /*
-//     Frees the physics object memory
-// */
-// void PhysicsObjectDestroy(PhysicsObject* physicsObject) {
-
-// }
-
-// /*
-//     Frees the static object memory
-// */
-// void StaticObjectDestroy(StaticObject* staticObject) {
-
-// }
