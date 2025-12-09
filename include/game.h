@@ -8,7 +8,6 @@
 #include "player.h"
 #include "collisions.h"
 #include "hashing.h"
-#include "ds/hashmap.h"
 
 /*
     Initializes the game and returns if succeeded
