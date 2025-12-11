@@ -1,13 +1,15 @@
 #pragma once
 #include <stdlib.h>
 #include <stdio.h>
-#include "ds/vector.h"
-#include "game_object.h"
+#include "gobjects.h"
 #include "collisions.h"
+#include "hashing.h"
+
+
 
 typedef struct Scene {
-    Vector *staticObjects;
-    Vector *physicsObjects;
+    ObjectGroup_t *allObjects;
+    struct {uint32_t key; ObjectGroup_t *value;} *chunks;
     float gravity;
 } Scene;
 
@@ -25,11 +27,6 @@ void SceneDestroy(Scene* scene);
     Draws all the objects inside the scene
 */
 void SceneDraw(Scene* scene);
-
-/*
-    Saves all immovable objects as a single texture
-*/
-void SceneOptimize(Scene* scene);
 
 /*
     Calculates physics tick for every physics object in the scene
