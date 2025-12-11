@@ -98,6 +98,7 @@ ObjectGroup_t* ObjectGroupCreate() {
     return newGroup;
 }
 
+
 /*
     Frees the object group
 */
@@ -126,6 +127,7 @@ void ObjectGroupFree(ObjectGroup_t* objectGroup) {
     free(objectGroup);
 }
 
+
 /*
     Draws the object group
 */
@@ -149,6 +151,7 @@ void ObjectGroupDraw(ObjectGroup_t* objectGroup) {
     }
 }
 
+
 /*
     Adds new physics object to the group or overrides
 */
@@ -157,6 +160,7 @@ void ObjectGroupSetPhysicsObject(ObjectGroup_t *objectGroup, PhysicsObject* phys
     hmput(objectGroup->physicsObjects, objectId, physicsObject);
 }
 
+
 /*
     Adds new static object to the group or overrides
 */
@@ -164,6 +168,7 @@ void ObjectGroupSetStaticObject(ObjectGroup_t *objectGroup, StaticObject* static
     uint32_t objectId = staticObject->gameObject.objectId;
     hmput(objectGroup->staticObjects, objectId, staticObject);
 }
+
 
 /*
     Removes element with given objectId
