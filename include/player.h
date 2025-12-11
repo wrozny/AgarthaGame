@@ -3,7 +3,7 @@
 #include "raylib.h"
 #include "raymath.h"
 
-#include "game_object.h"
+#include "gobjects.h"
 
 #define PLAYER_SPEED 200.0f
 
