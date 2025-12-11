@@ -1,5 +1,7 @@
 #include "game_maps.h"
 
+#include "ds/stb_ds.h"
+
 const char map1[MAP1_SIZE_VERTICAL][MAP1_SIZE_HORIZONTAL] = {
     // {1, 1 ,1, 1, 1, 1, 1, 1, 1, 1},
     // {1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -72,11 +74,13 @@ void LoadMapToScene(Scene* scene, MapType mapType) {
                 Vector2 pos;
                 pos.x = (float)(x * MAP1_BLOCK_SIZE + MAP1_BLOCK_SIZE);
                 pos.y = (float)(y * MAP1_BLOCK_SIZE);
+                printf("Adding static object!\n");
                 StaticObject* obj = StaticObjectCreate(spriteIdToRender, pos, blockSize, 0.0f, true);
                 SceneAddStaticObject(scene, obj);
+                printf("After adding static object!\n");
             }
         }
     }
 
-    printf("Amount of objects loaded = %d\n", scene->staticObjects->size + scene->physicsObjects->size);
+    printf("Amount of objects loaded = %d\n", hmlen(scene->allObjects->physicsObjects) + hmlen(scene->allObjects->staticObjects));
 }
