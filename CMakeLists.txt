@@ -5,7 +5,7 @@ set(CMAKE_C_STANDARD 11)
 
 include(FetchContent)
 set(RAYLIB_VERSION 5.5)
-
+cmake_policy(SET CMP0135 NEW)
 FetchContent_Declare(
     raylib
     URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
