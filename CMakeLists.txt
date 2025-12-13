@@ -15,8 +15,6 @@ FetchContent_Declare(
 set(BUILD_EXAMPLES OFF CACHE INTERNAL "")
 FetchContent_MakeAvailable(raylib)
 
-#add_subdirectory(external/raylib)
-
 file(GLOB_RECURSE GAME_SOURCE_FILES src/*.c)
 list(REMOVE_ITEM GAME_SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/main.c")
 
