@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "gobjects.h"
-#include "collisions.h"
+#include "physics/physics.h"
 #include "hashing.h"
 
 
