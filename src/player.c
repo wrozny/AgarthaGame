@@ -13,7 +13,7 @@ void InitPlayer() {
     PlayerCamera.offset = Vector2Zero();
     PlayerCamera.rotation = 0.0f;
     PlayerCamera.target = Vector2Zero();
-    PlayerCamera.zoom = 1.0f;
+    PlayerCamera.zoom = 3.0f;
 }
 
 

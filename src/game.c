@@ -5,6 +5,8 @@
 
 Scene *currentScene;
 
+float zoom = 1.0f;
+
 
 static inline float clampf(float value, float min, float max) {
     if(value > max) {
@@ -22,6 +24,17 @@ void PhysicsUpdate(double deltaTime) {
     inputDirection.y = -inputDirection.y * PLAYER_SPEED * (float)deltaTime;
 
     PlayerCamera.target = Vector2Add(inputDirection, PlayerCamera.target);
+
+    PlayerCamera.zoom = zoom;
+
+    if(IsKeyDown(KEY_E)) {
+        zoom += 1.0f * (float)deltaTime;
+    }
+    if(IsKeyDown(KEY_Q)) {
+        zoom -= 1.0f * (float)deltaTime;
+    }
+
+    zoom = clampf(zoom, (1.0f / 3.0f), 3.0f);
 
     //printf("%.3f\n", 1 / GetFrameTime());
 }
