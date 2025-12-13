@@ -87,7 +87,7 @@ int AssetsLoadTexture(const char* filePath) {
     Texture2D tex = LoadTexture(filePath);
     arrpush(Assets_loadedTextures, tex);
     Assets_loadedAssetsCount++;
-    return arrlen(Assets_loadedTextures) - 1;
+    return (int)arrlen(Assets_loadedTextures) - 1;
 }
 
 /*
@@ -105,7 +105,7 @@ int AssetsLoadTextureFromBytes(const char* fileType, const unsigned char* fileDa
 
     arrpush(Assets_loadedTextures, tex);
     Assets_loadedAssetsCount++;
-    return arrlen(Assets_loadedTextures) - 1;
+    return (int)arrlen(Assets_loadedTextures) - 1;
 }
 
 /*

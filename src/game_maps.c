@@ -82,5 +82,5 @@ void LoadMapToScene(Scene* scene, MapType mapType) {
         }
     }
 
-    printf("Amount of objects loaded = %d\n", hmlen(scene->allObjects->physicsObjects) + hmlen(scene->allObjects->staticObjects));
+    printf("Amount of objects loaded = %d\n", (int)hmlen(scene->allObjects->physicsObjects) + (int)hmlen(scene->allObjects->staticObjects));
 }

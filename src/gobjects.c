@@ -104,7 +104,7 @@ ObjectGroup_t* ObjectGroupCreate() {
 */
 void ObjectGroupFree(ObjectGroup_t* objectGroup) {
     if(!objectGroup->staticObjects) {
-        int staticObjectsCount = hmlen(objectGroup->staticObjects);
+        int staticObjectsCount = (int)hmlen(objectGroup->staticObjects);
 
         for(int i = 0; i < staticObjectsCount; i++) {
             StaticObject *currStaticObject = objectGroup->staticObjects[i].value;
@@ -113,7 +113,7 @@ void ObjectGroupFree(ObjectGroup_t* objectGroup) {
     }
 
     if(!objectGroup->physicsObjects) {
-        int physicsObjectsCount = hmlen(objectGroup->physicsObjects);
+        int physicsObjectsCount = (int)hmlen(objectGroup->physicsObjects);
 
         for(int i = 0; i < physicsObjectsCount; i++) {
             PhysicsObject *currPhysicsObject = objectGroup->physicsObjects[i].value;
@@ -133,7 +133,7 @@ void ObjectGroupFree(ObjectGroup_t* objectGroup) {
 */
 void ObjectGroupDraw(ObjectGroup_t* objectGroup) {
     if(objectGroup->staticObjects) {
-        int staticObjectsCount = hmlen(objectGroup->staticObjects);
+        int staticObjectsCount = (int)hmlen(objectGroup->staticObjects);
 
         for(int i = 0; i < staticObjectsCount; i++) {
             StaticObject *currStaticObject = objectGroup->staticObjects[i].value;
@@ -142,7 +142,7 @@ void ObjectGroupDraw(ObjectGroup_t* objectGroup) {
     }
 
     if(objectGroup->physicsObjects) {
-        int physicsObjectsCount = hmlen(objectGroup->physicsObjects);
+        int physicsObjectsCount = (int)hmlen(objectGroup->physicsObjects);
 
         for(int i = 0; i < physicsObjectsCount; i++) {
             PhysicsObject *currPhysicsObject = objectGroup->physicsObjects[i].value;
