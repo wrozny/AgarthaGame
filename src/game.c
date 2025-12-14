@@ -35,8 +35,6 @@ void PhysicsUpdate(double deltaTime) {
     }
 
     zoom = clampf(zoom, (1.0f / 3.0f), 3.0f);
-
-    //printf("%.3f\n", 1 / GetFrameTime());
 }
 
 void OnFrameRender(double deltaTime) {
@@ -53,6 +51,8 @@ bool InitGame() {
     LoadMapToScene(currentScene, MAPTYPE_AGARTHA_START);
     InitPlayer();
     SetTargetFPS(60);
+
+    SceneObjectGroupBuffer = calloc(32, sizeof(ObjectGroup_t*));
 
     if (!IsWindowReady()) {
         return false;
@@ -76,5 +76,6 @@ void RunGame() {
 void CloseGame() {
     CloseWindow();
     SceneDestroy(currentScene);
+    free(SceneObjectGroupBuffer);
     AssetsUnload();
 }
