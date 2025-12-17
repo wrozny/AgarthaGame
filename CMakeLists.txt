@@ -33,5 +33,5 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if(APPLE)
-    target_link_libraries(AgarthaGame "-framework IOKit" "-framework Cocoa" "-framework OpenGL")
+    target_link_libraries(AgarthaGame PRIVATE "-framework IOKit" "-framework Cocoa" "-framework OpenGL")
 endif()
