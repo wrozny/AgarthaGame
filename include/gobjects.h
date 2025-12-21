@@ -17,7 +17,9 @@ typedef struct PhysicsObject {
     GameObject gameObject;
     Vector2 previousPos;
     Vector2 velocity;
+    float mass;
     bool inAir;
+    bool physicsStepCompleted;
 } PhysicsObject;
 
 typedef struct StaticObject {
@@ -35,6 +37,11 @@ typedef struct ObjectGroup {
     Draws game object
 */
 void GameObjectDraw(GameObject* gameObject);
+
+/*
+    Draws the outline of a game object
+*/
+void GameObjectDrawOutline(GameObject* gameObject);
 
 /*
     Creates a new GameObject instance with unique id
@@ -88,3 +95,15 @@ bool ObjectGroupRemove(ObjectGroup_t* objectGroup, uint32_t objectId);
         StaticObject*  : ObjectGroupSetStaticObject\
     )(obj_g, obj)
 #endif
+
+/*
+    Returns the friction of a game object
+*/
+static inline float GameObjectGetFriction(SpriteId spriteId) {
+    
+    switch(spriteId) {
+        case SI_TILE_GRASS: return 200.0f;
+        case SI_TILE_DIRT: return 250.0f;
+    }
+    return 0.0f;
+}
