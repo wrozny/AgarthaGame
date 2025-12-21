@@ -24,7 +24,7 @@ void GameObjectDraw(GameObject *gameObject) {
     Draws the outline of a game object
 */
 void GameObjectDrawOutline(GameObject* gameObject) {
-    DrawRectangleLines(gameObject->pos.x, gameObject->pos.y, gameObject->size.x, gameObject->size.y, RED);
+    DrawRectangleLines((int)gameObject->pos.x, (int)gameObject->pos.y, (int)gameObject->size.x, (int)gameObject->size.y, RED);
 }
 
 /*
