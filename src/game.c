@@ -82,14 +82,11 @@ bool InitGame() {
 void RunGame() {
     while(!WindowShouldClose()) {
         double deltaTime = GetFrameTime();
+        PhysicsUpdate(deltaTime);
         BeginDrawing();
             ClearBackground(BLACK);
             OnFrameRender(deltaTime);
-            BeginMode2D(PlayerCamera);
-            PhysicsUpdate(deltaTime);
-            EndMode2D();
         EndDrawing();
-        
     }
 }
 
