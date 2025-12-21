@@ -105,12 +105,44 @@ void SceneDrawDebug(Scene* scene) {
     DrawText(buffer, (int)PlayerCamera.target.x, (int)PlayerCamera.target.y, 20, WHITE);
 }
 
+/*
+    Applies velocity vector to position vector based on delta time
+*/
+static inline Vector2 PhysicsApplyVelocityToVector2(Vector2 pos, Vector2 velocity, float deltaTime) {
+    return (Vector2) {.x = pos.x + (velocity.x * deltaTime), .y = pos.y + (velocity.y * deltaTime)};
+}
 
 /*
     Calculates physics tick for every physics object in the scene
 */
 void SceneUpdatePhysics(Scene* scene, double deltaTime) {
-    
+    size_t physicsObjectsCount = hmlen(scene->allObjects->physicsObjects);
+
+    float f_deltaTime = (float) deltaTime; // convert double to float for position calculation convenience
+
+    for(int i = 0; i < physicsObjectsCount; i++) {
+        PhysicsObject *currPhysicsObject = scene->allObjects->physicsObjects[i].value;
+        currPhysicsObject->physicsStepCompleted = false;
+    }
+
+    for(int i = 0; i < physicsObjectsCount; i++) {
+        PhysicsObject *currPhysicsObject = scene->allObjects->physicsObjects[i].value;
+
+        //gravity code
+        currPhysicsObject->velocity = Vector2Add(currPhysicsObject->velocity, (Vector2) {.x = 0.0f, .y = 1000.0f * f_deltaTime});
+
+        Vector2 newPos = PhysicsApplyVelocityToVector2(currPhysicsObject->gameObject.pos, currPhysicsObject->velocity, f_deltaTime);
+        SceneUpdateObjectGroupBuffer(scene, 
+            (Rectangle) {
+                .x = newPos.x, 
+                .y = newPos.y, 
+                .width = currPhysicsObject->gameObject.size.x, 
+                .height = currPhysicsObject->gameObject.size.y
+            }
+        );
+
+        PhysicsResolveObjectTick(currPhysicsObject, SceneObjectGroupBuffer, f_deltaTime);
+    }
 }
 
 /*
