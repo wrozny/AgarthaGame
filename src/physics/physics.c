@@ -2,57 +2,170 @@
 #include "ds/stb_ds.h"
 
 /*
-    Resolves collision between physics object and a collidable game object
+    Returns either -1, 0 or 1 based on the direction of x
 */
-static inline void PhysicsResolveCollision_PO(PhysicsObject *a, GameObject *b) {
-    //!TODO
+static inline int MathSignf(float x) {
+    return (x > 0.0f) - (x < 0.0f);
 }
 
 /*
-    Resolves collision between 2 physics objects
+    Returns either -1, 0 or 1 based on the direction x but with margin of error for checking meaningfull input
 */
-static inline void PhysicsResolveCollision_PP(PhysicsObject *a, PhysicsObject *b) {
-    //!TODO
+static inline int MathSignfEpsilon(float x, float epsilon) {
+    return (x > epsilon) - (x < -epsilon);
 }
 
 /*
-    Resolves collision between physics object and a static object
+    Returns the bigger value
 */
-static inline void PhysicsResolveCollision_PS(PhysicsObject *a, StaticObject *b) {
-    if(b->canCollide) {
-        PhysicsResolveCollision_PO(a, &b->gameObject);
+static inline float MathMaxf(float a, float b) {
+    if(a > b) {
+        return a;
     }
+    return b;
+}
+
+/*
+    Returns the smaller value
+*/
+static inline float MathMinf(float a, float b) {
+    if (a < b) {
+        return a;
+    }
+    return b;
+}
+
+/*
+    Returns the absolute value of x
+*/
+static inline float MathAbsf(float x) {
+    return x < 0.0f? -x : x;
+}
+
+/*
+    Floors the float x
+*/
+static inline float MathFloorf(float x) {
+    return (float)((int)(x));
+}
+
+/*
+    Removes the floating point from vector2 coordinates
+*/
+static inline Vector2 MathFloorVector2(Vector2 vec) {
+    return (Vector2) {.x = MathFloorf(vec.x), .y = MathFloorf(vec.y)};
+}
+
+/*
+    Applies velocity vector to position vector based on delta time
+*/
+static inline Vector2 PhysicsApplyVelocityToVector2(Vector2 pos, Vector2 velocity, float deltaTime) {
+    return (Vector2) {.x = pos.x + (velocity.x * deltaTime), .y = pos.y + (velocity.y * deltaTime)};
+}
+
+/*
+    Returns whether 2 objects are colliding
+*/
+static inline bool CollisionsObjectsColliding(GameObject *a, GameObject *b) {
+    return !(a->pos.x + a->size.x <= b->pos.x ||  // a is left of b
+             a->pos.x >= b->pos.x + b->size.x ||  // a is right of b
+             a->pos.y + a->size.y <= b->pos.y ||  // a is above b
+             a->pos.y >= b->pos.y + b->size.y);   // a is below b
+}
+
+/*
+    Returns whether 2 objects are colliding, with a margin of error (epsilon).
+    If the overlap is smaller than epsilon, it returns false.
+*/
+static inline bool CollisionsObjectsCollidingEpsilon(GameObject *a, GameObject *b, float epsilon) {
+    return !(a->pos.x + a->size.x <= b->pos.x + epsilon ||  // a is left of b
+             a->pos.x >= b->pos.x + b->size.x - epsilon ||  // a is right of b
+             a->pos.y + a->size.y <= b->pos.y + epsilon ||  // a is above b
+             a->pos.y >= b->pos.y + b->size.y - epsilon);   // a is below b
 }
 
 
-/*
-    Resolves the velocity applied to the physics object
-*/
 void PhysicsResolveObjectTick(PhysicsObject *target, ObjectGroup_t **objectGroups, float deltaTime) {
-    Vector2 oldPosition = target->gameObject.pos;
-    Vector2 newPosition = 
-        (Vector2) {
-            .x = target->gameObject.pos.x + target->velocity.x * deltaTime, 
-            .y = target->gameObject.pos.y + target->velocity.y * deltaTime
-        };
-    
-    for (; *objectGroups; ++objectGroups) {
-        ObjectGroup_t *currentGroup = *objectGroups;
-
-        if(currentGroup->staticObjects) {
-            size_t staticObjectCount = hmlen(currentGroup->staticObjects);
-
-            for(int i = 0; i < staticObjectCount; i++) {
-                //!TODO
-            }
-        }
-
-        if(currentGroup->physicsObjects) {
-            size_t physicsObjectCount = hmlen(currentGroup->physicsObjects);
-
-            for(int i = 0; i < physicsObjectCount; i++) {
-                //!TODO
-            }
-        }
+    if(target->physicsStepCompleted) {
+        return;
     }
+
+    // too big of a delta time (less than 10 fps) for physics calculation, clipping could happen
+    // might implement better system in the future, one that also handles bigger velocities
+    if (deltaTime > 0.1f) {
+        return;
+    }
+
+    target->previousPos = target->gameObject.pos;
+    target->inAir = true;
+
+    // x resolution static objects
+    float moveX = target->velocity.x * deltaTime;
+    target->gameObject.pos.x += moveX;
+    
+    for (ObjectGroup_t **groupsPtr = objectGroups; *groupsPtr; ++groupsPtr) {
+        ObjectGroup_t *currObjectGroup = *groupsPtr;
+
+        // static object resolution
+        if(currObjectGroup->staticObjects) {
+            size_t staticObjectCount = hmlen(currObjectGroup->staticObjects);
+
+            for (int i = 0; i < staticObjectCount; i++) {
+                StaticObject *currStaticObject = currObjectGroup->staticObjects[i].value;
+                GameObject *staticGameObject = &currStaticObject->gameObject;
+
+                if (CollisionsObjectsColliding(&target->gameObject, staticGameObject)) {
+                    if (target->velocity.x > 0) 
+                        target->gameObject.pos.x = staticGameObject->pos.x - target->gameObject.size.x;
+                    else if (target->velocity.x < 0) 
+                        target->gameObject.pos.x = staticGameObject->pos.x + staticGameObject->size.x;
+                    target->velocity.x = 0;
+                }
+            }
+        }
+
+
+        // physics object resolution
+        // TODO
+    }
+
+
+    // y resolution
+    float moveY = target->velocity.y * deltaTime;
+    target->gameObject.pos.y += moveY;
+
+    for (ObjectGroup_t **groupsPtr = objectGroups; *groupsPtr; ++groupsPtr) {
+        ObjectGroup_t *currObjectGroup = *groupsPtr;
+
+        // static object resolution
+        if(currObjectGroup->staticObjects) {
+            size_t staticObjectCount = hmlen(currObjectGroup->staticObjects);
+            for (int i = 0; i < staticObjectCount; i++) {
+                StaticObject *currStaticObject = currObjectGroup->staticObjects[i].value;
+                GameObject *staticGameObject = &currStaticObject->gameObject;
+
+                if (CollisionsObjectsColliding(&target->gameObject, staticGameObject)) {
+                    if (target->velocity.y > 0) {
+                        target->gameObject.pos.y = staticGameObject->pos.y - target->gameObject.size.y;
+                        target->inAir = false;
+
+                        // friction calculation
+                        float friction = GameObjectGetFriction(staticGameObject->spriteId);
+                        float frictionLoss = friction * deltaTime;
+                        if (MathAbsf(target->velocity.x) <= frictionLoss) target->velocity.x = 0;
+                        else target->velocity.x -= MathSignf(target->velocity.x) * frictionLoss;
+
+                    } else if (target->velocity.y < 0) {
+                        target->gameObject.pos.y = staticGameObject->pos.y + staticGameObject->size.y;
+                    }
+                    target->velocity.y = 0;
+                }
+            }
+        }
+
+        // physics object resolution
+        // TODO
+    }
+
+    target->physicsStepCompleted = true;
 }
