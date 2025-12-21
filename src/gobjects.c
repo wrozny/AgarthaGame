@@ -20,6 +20,12 @@ void GameObjectDraw(GameObject *gameObject) {
     );
 }
 
+/*
+    Draws the outline of a game object
+*/
+void GameObjectDrawOutline(GameObject* gameObject) {
+    DrawRectangleLines(gameObject->pos.x, gameObject->pos.y, gameObject->size.x, gameObject->size.y, RED);
+}
 
 /*
     Allocates memory for a game object and returns pointer to it
@@ -47,6 +53,8 @@ PhysicsObject* PhysicsObjectCreate(SpriteId spriteId, Vector2 pos, Vector2 size,
     newPhysicsObject->previousPos = (Vector2) {0.0f, 0.0f};
     newPhysicsObject->velocity = (Vector2){0.0f, 0.0f};
     newPhysicsObject->inAir = true;
+    newPhysicsObject->physicsStepCompleted = false;
+    newPhysicsObject->mass = 100.0f;
 
     return newPhysicsObject;
 }
