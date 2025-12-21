@@ -47,6 +47,8 @@ void PhysicsUpdate(double deltaTime) {
         firstPhysicsObject->gameObject.pos = (Vector2) {.x = 128.0f, 128.0f};
     }
 
+    PlayerCamera.target = Vector2Subtract(firstPhysicsObject->gameObject.pos, (Vector2) {.x = ((960.0f / 2.0f) / PlayerCamera.zoom) - 32.0f, .y = (720.0f / 2.0f) / PlayerCamera.zoom});
+
     SceneUpdatePhysics(currentScene, deltaTime);
 }
 
