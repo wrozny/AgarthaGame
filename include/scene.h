@@ -51,6 +51,12 @@ void SceneAddStaticObject(Scene* targetScene, StaticObject* staticObject);
 */
 void SceneAddPhysicsObject(Scene* targetScene, PhysicsObject* physicsObject);
 
+/*
+    Adds the pointer of physics object to chunk that contains it and removes it from chunks that physics object left
+    should be executed everytime physics object changes a chunk
+*/
+void SceneUpdatePhysicsObjectChunk(Scene* targetScene, PhysicsObject* physicsObject);
+
 
 /*
     Packs two int16's into one uint32

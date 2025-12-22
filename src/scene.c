@@ -142,6 +142,7 @@ void SceneUpdatePhysics(Scene* scene, double deltaTime) {
         );
 
         PhysicsResolveObjectTick(currPhysicsObject, SceneObjectGroupBuffer, f_deltaTime);
+        SceneUpdatePhysicsObjectChunk(scene, currPhysicsObject);
     }
 }
 
@@ -170,6 +171,14 @@ void SceneAddPhysicsObject(Scene* targetScene, PhysicsObject *physicsObject) {
     useful both in physics simulation and chunk rendering
 */
 void SceneUpdateObjectGroupBuffer(Scene *scene, Rectangle target) {
+    /*
+        TODO:
+            currently the buffer can be overflown if enough chunks and big enough target rectangle
+
+            simple fix:
+                if we get to the length of buffer - 1 we should return and ignore rest
+    */
+    
     int16_t minChunkX = (int16_t)target.x / CHUNK_PIXEL_SIZE;
     int16_t maxChunkX = (int16_t)(target.x + target.width) / CHUNK_PIXEL_SIZE;
 
@@ -193,4 +202,19 @@ void SceneUpdateObjectGroupBuffer(Scene *scene, Rectangle target) {
     }
 
     SceneObjectGroupBuffer[freeIdx] = NULL;
+}
+
+
+/*
+    Adds the pointer of physics object to chunk that contains it and removes it from chunks that physics object left
+    should be executed everytime physics object changes a chunk
+*/
+void SceneUpdatePhysicsObjectChunk(Scene* targetScene, PhysicsObject* physicsObject) {
+    uint32_t oldChunkId = ScenePackInt16((int16_t)(physicsObject->previousPos.x / CHUNK_PIXEL_SIZE), (int16_t)(physicsObject->previousPos.y / CHUNK_PIXEL_SIZE));
+    ///uint32_t newChunkId = ScenePackInt16((int16_t)(physicsObject->gameObject.pos.x / CHUNK_PIXEL_SIZE), (int16_t)(physicsObject->gameObject.pos.y / CHUNK_PIXEL_SIZE));
+
+    ObjectGroup_t *oldChunkGroup = SceneEnsureChunk_f(targetScene, oldChunkId);
+    hmdel(oldChunkGroup->physicsObjects, physicsObject->gameObject.objectId);
+
+    SceneAddPhysicsObject(targetScene, physicsObject);
 }
